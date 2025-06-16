@@ -202,4 +202,4 @@ st.dataframe(tabel_lengkap.reset_index(drop=True))
 
 # Footer
 st.markdown("---")
-st.caption("By Dinda Maulidiyah 💖")
+st.caption("By Dinda Maulidiyah ")
