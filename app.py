@@ -22,7 +22,7 @@ df = load_data()
 # Styling
 st.markdown("""
     <style>
-    .main { background-color: #fff0f3; }
+    .main { background-color: #ffffff; }
     .block-container { padding-top: 3rem; padding-left: 2rem; padding-right: 2rem; }
     .sidebar .sidebar-content, .sidebar .sidebar-content * {
         color: black !important;
