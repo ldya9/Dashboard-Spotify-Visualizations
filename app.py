@@ -2,6 +2,9 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
+# Konfigurasi halaman HARUS berada sebelum komponen Streamlit lainnya
+st.set_page_config(page_title="Spotify Dashboard", layout="wide")
+
 # Load dan siapkan data
 @st.cache_data
 def load_data():
@@ -16,36 +19,24 @@ def load_data():
 
 df = load_data()
 
-# Konfigurasi halaman
-st.set_page_config(page_title="Spotify Dashboard", layout="wide")
-
 # Styling
 st.markdown("""
     <style>
     .main { background-color: #fff0f3; }
     .block-container { padding-top: 3rem; padding-left: 2rem; padding-right: 2rem; }
-
-    /* Sidebar Font */
     .sidebar .sidebar-content, .sidebar .sidebar-content * {
         color: black !important;
         font-size: 14px !important;
     }
-
-    /* Global font */
     html, body, div, p, span, label {
         font-size: 16px !important;
     }
-
-    /* Header size */
     .block-container h1, .block-container h2, .block-container h3 {
         font-size: 40px !important;
     }
-
     h2, h3 {
         font-size: 32px !important;
     }
-
-    /* Perbesar Metrik */
     div[data-testid="metric-container"] {
         font-size: 30px !important;
     }
