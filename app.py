@@ -175,7 +175,7 @@ fig_pie = px.pie(durasi_pie, names="durasi_kategori", values="estimated_streams"
 st.plotly_chart(fig_pie, use_container_width=True)
 
 # Top 10 Artis
-st.markdown("### 👩‍🎤 Top 10 Artis Berdasarkan Total Stream")
+st.markdown("### 🌟 Top 10 Artis Berdasarkan Total Stream")
 
 top_stream_chart = (
     filtered_df.groupby("artist")["estimated_streams"]
