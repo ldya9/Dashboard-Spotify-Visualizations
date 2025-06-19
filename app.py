@@ -20,26 +20,42 @@ df = load_data()
 st.set_page_config(page_title="Spotify Dashboard", layout="wide")
 
 # Styling
-# Styling
 st.markdown("""
     <style>
     .main { background-color: #fff0f3; }
-    .block-container { padding-top: 5rem; }
+    .block-container { padding-top: 3rem; padding-left: 2rem; padding-right: 2rem; }
+
+    /* Sidebar Font */
     .sidebar .sidebar-content, .sidebar .sidebar-content * {
         color: black !important;
-        font-size: 5px !important;
+        font-size: 14px !important;
     }
-    .st-bb, .st-ef, svg {
-        color: black !important;
-    }
+
+    /* Global font */
     html, body, div, p, span, label {
-        font-size: 25px !important;
+        font-size: 16px !important;
     }
+
+    /* Header size */
     .block-container h1, .block-container h2, .block-container h3 {
         font-size: 40px !important;
     }
+
     h2, h3 {
-        font-size: 40px !important;
+        font-size: 32px !important;
+    }
+
+    /* Perbesar Metrik */
+    div[data-testid="metric-container"] {
+        font-size: 30px !important;
+    }
+    div[data-testid="metric-container"] > label {
+        font-size: 24px !important;
+    }
+    div[data-testid="metric-container"] > div {
+        font-size: 36px !important;
+        font-weight: bold;
+        color: #1DB954;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -49,12 +65,11 @@ color_ijo = ["#b2f7ef", "#9fe2bf", "#77dd77", "#99edc3", "#00a86b", "#228b22", "
 
 # Header dengan logo Spotify
 st.markdown("""
-<div style='display: flex; align-items: center; gap: 10px;'>
-    <img src='https://upload.wikimedia.org/wikipedia/commons/8/84/Spotify_icon.svg' width='70'/>
+<div style='display: flex; align-items: center; gap: 10px; margin-bottom: 30px;'>
+    <img src='https://upload.wikimedia.org/wikipedia/commons/8/84/Spotify_icon.svg' width='60'/>
     <h1 style='margin: 0; font-size: 65px; font-weight: bold;'>Spotify Music Dashboard</h1>
 </div>
 """, unsafe_allow_html=True)
-
 
 # Sidebar Filter
 with st.sidebar:
@@ -156,7 +171,6 @@ filtered_df['durasi_kategori'] = filtered_df['duration_ms'].apply(kategori_duras
 durasi_pie = filtered_df.groupby("durasi_kategori")["estimated_streams"].sum().reset_index()
 fig_pie = px.pie(durasi_pie, names="durasi_kategori", values="estimated_streams",
                  color_discrete_sequence=color_ijo)
-
 
 st.plotly_chart(fig_pie, use_container_width=True)
 
