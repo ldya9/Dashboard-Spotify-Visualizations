@@ -22,33 +22,58 @@ df = load_data()
 # Styling
 st.markdown("""
     <style>
-    .main { background-color: #ffffff; }
-    .block-container { padding-top: 3rem; padding-left: 2rem; padding-right: 2rem; }
-    .sidebar .sidebar-content, .sidebar .sidebar-content * {
+    /* Ganti latar belakang utama */
+    .stApp {
+        background-color: #F0F8FF !important;
+    }
+
+    /* Ganti warna sidebar */
+    section[data-testid="stSidebar"] {
+        background-color: #E0ECFF !important;
+    }
+
+    /* Ukuran heading sidebar biar tidak ikut kecil */
+    section[data-testid="stSidebar"] h1,
+    section[data-testid="stSidebar"] h2,
+    section[data-testid="stSidebar"] h3 {
+        font-size: 22px !important;
+        font-weight: bold;
+    }
+
+    /* Ukuran elemen lain di sidebar tetap kecil */
+    section[data-testid="stSidebar"] *:not(h1):not(h2):not(h3) {
         color: black !important;
         font-size: 14px !important;
     }
+
+    .block-container { padding-top: 3rem; padding-left: 2rem; padding-right: 2rem; }
+
     html, body, div, p, span, label {
         font-size: 16px !important;
     }
+
     .block-container h1, .block-container h2, .block-container h3 {
         font-size: 40px !important;
     }
+
     h2, h3 {
         font-size: 32px !important;
     }
+
     div[data-testid="metric-container"] {
         font-size: 30px !important;
     }
+
     div[data-testid="metric-container"] > label {
         font-size: 24px !important;
     }
+
     div[data-testid="metric-container"] > div {
         font-size: 36px !important;
         font-weight: bold;
         color: #1DB954;
     }
-    </style>
+</style>
 """, unsafe_allow_html=True)
 
 # Warna hijau custom ala Spotify
@@ -193,7 +218,7 @@ fig_top_stream.update_layout(
 st.plotly_chart(fig_top_stream, use_container_width=True)
 
 # Tabel Data Lagu
-st.markdown("### 📋 Tabel Data Lagu (Terfilter)")
+st.markdown("### 📋 Tabel Data Lagu")
 
 tabel_lengkap = (
     filtered_df[[ 
