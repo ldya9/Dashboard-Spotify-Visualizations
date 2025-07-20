@@ -142,17 +142,16 @@ fig_popular.update_layout(
 
 st.plotly_chart(fig_popular, use_container_width=True)
 
-# Tren Jumlah Stream per Bulan
-st.markdown("### 📈 Tren Jumlah Stream per Bulan")
+st.markdown("### 📈 Tren Jumlah Lagu Dirilis per Bulan")
 
 fig_line = px.line(
-    filtered_df.groupby("release_month")["estimated_streams"].sum()
+    filtered_df.groupby("release_month")["track"].count()
     .reindex([
         'January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December'
-    ]).dropna().reset_index(),
+    ]).dropna().reset_index(name="jumlah_lagu"),
     x="release_month",
-    y="estimated_streams",
+    y="jumlah_lagu",
     markers=True,
     line_shape="spline",
     color_discrete_sequence=[color_ijo[3]]
@@ -160,20 +159,25 @@ fig_line = px.line(
 
 st.plotly_chart(fig_line, use_container_width=True)
 
-# Genre dengan Stream Tertinggi
-st.markdown("### 🎶 Genre dengan Total Stream Tertinggi")
+st.markdown("### 🎶 Genre dengan Jumlah Lagu Terbanyak")
 
-genre_stream = filtered_df.groupby("genre")["estimated_streams"].sum().nlargest(10).reset_index()
-fig_genre = px.bar(genre_stream, x="genre", y="estimated_streams", color="genre",
-                   color_discrete_sequence=color_ijo)
+genre_lagu = filtered_df.groupby("genre")["track"].count().nlargest(10).reset_index(name="jumlah_lagu")
 
-fig_genre.update_layout(title=dict(text="", x=0.0, xanchor="left", font=dict(size=20)))
+fig_genre = px.bar(
+    genre_lagu,
+    x="genre",
+    y="jumlah_lagu",
+    color="genre",
+    color_discrete_sequence=color_ijo
+)
 
 st.plotly_chart(fig_genre, use_container_width=True)
 
-# Distribusi Durasi
-st.markdown("### ⏱️ Distribusi Stream Berdasarkan Durasi")
 
+# Distribusi Durasi
+st.markdown("### ⏱️ Distribusi Lagu Berdasarkan Durasi")
+
+# Definisi fungsi kategori durasi HARUS didefinisikan sebelum dipakai
 def kategori_durasi(ms):
     menit = ms / 60000
     if menit <= 2:
@@ -183,27 +187,36 @@ def kategori_durasi(ms):
     else:
         return "Panjang (>4m)"
 
+
 filtered_df['durasi_kategori'] = filtered_df['duration_ms'].apply(kategori_durasi)
-durasi_pie = filtered_df.groupby("durasi_kategori")["estimated_streams"].sum().reset_index()
-fig_pie = px.pie(durasi_pie, names="durasi_kategori", values="estimated_streams",
-                 color_discrete_sequence=color_ijo)
+
+durasi_pie = filtered_df['durasi_kategori'].value_counts().reset_index()
+durasi_pie.columns = ['durasi_kategori', 'jumlah_lagu']
+
+# Pie chart
+fig_pie = px.pie(
+    durasi_pie,
+    names='durasi_kategori',
+    values='jumlah_lagu',
+    color_discrete_sequence=color_ijo
+)
 
 st.plotly_chart(fig_pie, use_container_width=True)
 
-# Top 10 Artis
-st.markdown("### 🌟 Top 10 Artis Berdasarkan Total Stream")
+#Top 10 Artis dengan Lagu Terbanyak
+st.markdown("### 🌟 Top 10 Artis dengan Lagu Terbanyak")
 
-top_stream_chart = (
-    filtered_df.groupby("artist")["estimated_streams"]
-    .sum()
+top_artis = (
+    filtered_df.groupby("artist")["track"]
+    .count()
     .nlargest(10)
-    .reset_index()
-    .sort_values(by="estimated_streams", ascending=True)
+    .reset_index(name="jumlah_lagu")
+    .sort_values(by="jumlah_lagu", ascending=True)
 )
 
 fig_top_stream = px.bar(
-    top_stream_chart,
-    x="estimated_streams",
+    top_artis,
+    x="jumlah_lagu",
     y="artist",
     orientation="h",
     color="artist",
@@ -212,10 +225,11 @@ fig_top_stream = px.bar(
 
 fig_top_stream.update_layout(
     yaxis=dict(title="Artis", autorange="reversed"),
-    xaxis=dict(title="Total Stream")
+    xaxis=dict(title="Jumlah Lagu")
 )
 
 st.plotly_chart(fig_top_stream, use_container_width=True)
+
 
 # Tabel Data Lagu
 st.markdown("### 📋 Tabel Data Lagu")
@@ -223,9 +237,9 @@ st.markdown("### 📋 Tabel Data Lagu")
 tabel_lengkap = (
     filtered_df[[ 
         "track", "album", "artist", "genre", "popularity", "explicit",
-        "release_date", "duration_min", "track_score", "estimated_streams"
+        "release_date", "duration_min", "track_score"
     ]]
-    .sort_values(by="estimated_streams", ascending=False)
+    .sort_values(by="popularity", ascending=False)
 )
 
 st.dataframe(tabel_lengkap.reset_index(drop=True))
